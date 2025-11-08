@@ -1,5 +1,6 @@
 import './app.css'
 import { useSignal } from '@preact/signals';
+import {useEffect} from 'preact/hooks'
 export function App() {
 const vibeWords = [
   "radiant","bloom","spark","glow","shine","rise","joy","thrive","calm","bliss",
@@ -11,9 +12,9 @@ const vibeWords = [
   "sense","hue","trace","line","curve","frame","motion","shape","void","dusk",
   "noir","still","stark","bare","mute","shadow","dim","blur","static","chill"
 ];
-
-const colors = ['#333']
-
+const color1 = useSignal('');
+const color2 = useSignal('');
+const color3 = useSignal('');
 const pickedWord = useSignal('');
 function randomInt(min:number, max:number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -21,16 +22,40 @@ function randomInt(min:number, max:number) {
 function DoTheThing(){
   pickedWord.value = vibeWords[randomInt(0, vibeWords.length - 1 )];
 
-  let color1 = `rgb(${randomInt(0,255)}, ${randomInt(0,255)}, ${randomInt(0,255)})`
-  let color2 = `rgb(${randomInt(0,255)}, ${randomInt(0,255)}, ${randomInt(0,255)})`
-  document.body.style = `background: linear-gradient(to bottom, ${color1}, ${color2});`; 
+  let colora1 = `rgb(${randomInt(0,255)}, ${randomInt(0,255)}, ${randomInt(0,255)})`;
+  color1.value  = colora1;
+  let colora2 = `rgb(${randomInt(0,255)}, ${randomInt(0,255)}, ${randomInt(0,255)})`;
+  color2.value = colora2;
+  let colora3 = `rgb(${randomInt(0,255)}, ${randomInt(0,255)}, ${randomInt(0,255)})`;
+  color3.value = colora3;
+
+  document.body.style = `background: linear-gradient(90deg, ${color1}, ${color2}, ${color3});`; 
   // document.body.style = `background-color:${color1}`
 }
+useEffect(()=>{
+  DoTheThing();
+}, [])
   return (
     <>
-      <button onClick={DoTheThing}>Do it</button>
+    {/* <button onClick={e=>{
+      setInterval(()=>{
+        DoTheThing();
+      }, 100)
+    }}>Epilepsy Warning</button> */}
+    <h1 class="cursive-font">
+      I'm feelin' {pickedWord.value ? `${pickedWord.value}y` : ''}
+    </h1>
+      <button onClick={DoTheThing}>Color me Curious</button>
 
-      <h1>{pickedWord.value}y</h1>
+      <span onClick={_e=>{
+        navigator.clipboard.writeText(color1.value)
+      }}>{color1}</span>
+      <span onClick={_e=>{
+        navigator.clipboard.writeText(color2.value)
+      }}>{color2}</span>
+      <span onClick={_e=>{
+        navigator.clipboard.writeText(color3.value)
+      }}>{color3}</span>
     </>
   )
 }
